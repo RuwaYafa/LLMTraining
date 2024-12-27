@@ -8,7 +8,7 @@ Create conda env with python 3.11
 
 Install dependencies using requirements.txt
 
-    pip install -r requirements.txt
+    conda install --yes --file requirements.txt -c pytorch -c nvidia
 
 ## Generate dataset for training
 I used the [101 Arabic Billion dataset](https://huggingface.co/datasets/ClusterlabAi/101_billion_arabic_words_dataset) to generate a small dataset to test LLM training.
