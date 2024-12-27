@@ -1,0 +1,17 @@
+Here is a list of XM data separated by a new line:
+```
+{data}
+```
+
+Follow these steps:
+1. Please extract 3 to 5 top topics being discussed in the XM data.
+2. For each topic provide a topic name.
+3. For each topic provide a topic headline or summary stating what the customers are saying about the topic.
+4. For each topic please extract 2 to 3 word-for-word lines from the input that best support the topic summary. Do not generate any new lines, do not mix lines together, extract single complete lines only.
+5. For each topic provide a list of 3 to 5 sentences describing the comments on the topic. 
+6. For each topic identify the sentiment. Sentiment categories are as follows: "Very Negative", "Negative", "Mixed", "Neutral", "Positive", "Very Positive".
+7. After extracting all topics, please summarize the XM data in details, we want valuable details to set context for the user. 
+8. After extracting all topics, generate a one line headline for the summary of people's comments. You can include maximum of 2 themes and overall sentiment of people's comments in this headline. Frame it as a short and informative single sentence.
+9. The output should be formatted as a JSON instance that conforms to the JSON schema below.
+
+{{"title": "One line headline for the summary","summary": "short paragraph summarizing the feedback","topics":[{{"topicName": "topic title or name","topicSummary": "summary headline of the topic","topicSentiment": "topic sentiment","topicExamples":[{{"example": "quoted complete line from the interactions"}}],"topicDescriptions":[{{"description": "Description of the customer comments on the topic"}}]}}]}}
