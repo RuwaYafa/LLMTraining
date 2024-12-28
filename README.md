@@ -2,13 +2,9 @@
 Source code to train and fine-tune LLMs using TRL SFTTrainer and Deepspeed
 
 ## Setup your environment
-Create conda env with python 3.11
+The configurations including channels and packages to use are all specified in `env.yml`. The below command will create the required conda env. The `--prefix` in the command below points to the location of the new conda env. When you run the command below, make sure you replace `[USERNAME]` with your username on the server and `[ENV_NAME]` with the name of your conda env.
 
-    conda create --name myenv python=3.11
-
-Install dependencies using requirements.txt
-
-    conda install --yes --file requirements.txt -c pytorch -c nvidia
+    conda env create --prefix /rep/[USERNAME]/envs/[ENV_NAME] -f env.yml
 
 ## Generate dataset for training
 I used the [101 Arabic Billion dataset](https://huggingface.co/datasets/ClusterlabAi/101_billion_arabic_words_dataset) to generate a small dataset to test LLM training.
