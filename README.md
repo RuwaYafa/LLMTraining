@@ -7,20 +7,28 @@ The configurations including channels and packages to use are all specified in `
     conda env create --prefix /rep/[USERNAME]/envs/[ENV_NAME] -f env.yml
 
 ## Generate dataset for training
-I used the [101 Arabic Billion dataset](https://huggingface.co/datasets/ClusterlabAi/101_billion_arabic_words_dataset) to generate a small dataset to test LLM training.
+I used the [CIDAR QA dataset](https://huggingface.co/datasets/arbml/CIDAR) to generate a small dataset to test LLM training.
 
-You can download one of the files from the 101 Arabic Billion dataset, from which you can generate small dataset. Use the command below to generate a test dataset.
+To generate a sample of the CIDAR dataset, simply run the command below, the output data path `/path/to/your/data/` should be used as input to the training script.
 
-    python /Users/mkhalilia/src/github/LLMTraining/src/blm/cli/train.py
-        --input_path /path/to/downloaded/101/data.jsonl 
+    python /Users/mkhalilia/src/github/LLMTraining/src/blm/cli/process.py
         --output_path /path/to/your/data/ 
-        --n 1000
+        --n 500
 
 ## Multi-GPU Training using Deepspeed
-To train the LLM using multi-GPUs using Deepseed use the following command.
+To train the LLM using multi-GPUs using Deepseed use the following command. Before you run the command below, some model like Llama require Huggingface token and you need to request access to these models. Some model can be used without a token, like Phi and Mistral. 
+
+To obtain a Huggingface token, create a Huggingface account, go to settings, then access tokens.
+
+In the training command below, you need to change the following values:
+* `/path/to/src/blm/cli/train.py` => Update that the path to the training script
+* `[GET_YOUR_TOKEN_FROM_HUGGINGFACE]` => Replace with your Huggingface token
+* `/path/to/output/dir` => Path to model output
+* `/path/to/src/blm/config/deepspeed_zero3.json` => Path to Deepspeed config 
+
 
     deepspeed --num_nodes=1 \
-        /rep/mkhalilia/src/blm/cli/train.py 
+        /path/to/src/blm/cli/train.py 
         --model_name_or_path meta-llama/Llama-3.2-1B 
         --quantize False 
         --token [GET_YOUR_TOKEN_FROM_HUGGINGFACE] 
@@ -29,14 +37,14 @@ To train the LLM using multi-GPUs using Deepseed use the following command.
         --num_train_epochs 4 
         --per_device_train_batch_size 1 
         --gradient_checkpointing True 
-        --output_dir /rep/mkhalilia/model 
+        --output_dir /path/to/output/dir 
         --learning_rate 2e-4 
         --gradient_accumulation_steps 8 
         --bf16 True 
         --tf32 False 
         --logging_strategy steps 
         --save_strategy steps 
-        --deepspeed /rep/mkhalilia/src/blm/config/deepspeed_zero3.json  
+        --deepspeed /path/to/src/blm/config/deepspeed_zero3.json  
         --logging_steps 100 
         --save_steps 100 
         --lora_r 64 
@@ -44,3 +52,8 @@ To train the LLM using multi-GPUs using Deepseed use the following command.
         --per_device_eval_batch_size 1 
         --eval_strategy steps 
         --eval_accumulation_steps 1 
+
+## Update PYTHONPATH
+You may encounter an error `blm` module not found. When you run the command on the GPU, you need to update the PYTHONPATH to include the path to the `blm` package. To do so, run the following command (`blm` should be located in /path/to/src):
+
+    export PYTHONPATH="${PYTHONPATH}:/path/to/src"

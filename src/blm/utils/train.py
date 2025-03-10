@@ -1,6 +1,6 @@
 from datasets import load_from_disk
 import logging
-from trl import SFTTrainer, SFTConfig, DataCollatorForCompletionOnlyLM
+from trl import SFTTrainer, DataCollatorForCompletionOnlyLM
 from blm.utils.peft import create_and_prepare_model
 from blm.utils.prompter import Prompter
 
@@ -14,7 +14,7 @@ def train(args):
 
     prompter = Prompter(tokenizer)
     dataset = load_from_disk(args.data_path)
-    #dataset = dataset.map(prompter, batched=True)
+    dataset = dataset.map(prompter, batched=True)
 
     logger.info(f"Pre-saving tokenizer to {args.output_dir}")
     tokenizer.save_pretrained(args.output_dir)
@@ -36,15 +36,12 @@ def train(args):
         model,
         train_dataset=dataset["train"],
         eval_dataset=dataset["eval"],
-        dataset_text_field="text",
+        dataset_text_field="prompt",
         tokenizer=tokenizer,
         max_seq_length=args.max_seq_length,
         args=args,
         data_collator=collator
     )
-
-    logger.info("Model architecture...")
-    trainer.accelerator.print(f"{trainer.model}")
 
     logger.info("Model parameters...")
     trainer.model.print_trainable_parameters()
