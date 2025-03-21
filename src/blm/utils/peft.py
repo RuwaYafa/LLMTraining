@@ -19,6 +19,7 @@ def create_and_prepare_model(args):
     quantization_config = None
 
     if args.quantize:
+        logger.info("Load quantization config")
         quantization_config = BitsAndBytesConfig(
             load_in_4bit=True,
             bnb_4bit_use_double_quant=True,

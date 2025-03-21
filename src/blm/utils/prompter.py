@@ -13,8 +13,8 @@ class Prompter:
 
         self.tokenizer = tokenizer
         self.model_family = self.tokenizer.name_or_path.split("/")[0]
-        self.instruction_template = templates.get(self.model_family, "default")["instruction_template"]
-        self.response_template = templates.get(self.model_family, "default")["response_template"]
+        self.instruction_template = templates.get(self.model_family, templates["default"])["instruction_template"]
+        self.response_template = templates.get(self.model_family, templates["default"])["response_template"]
 
     def __call__(self, data):
         """Prepare input for model training or inference.
